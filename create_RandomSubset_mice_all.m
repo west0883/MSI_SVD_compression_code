@@ -15,16 +15,31 @@ dir_exper=[dir_base experiment_name '\'];
 dir_out=dir_exper; 
 mkdir(dir_out);
 
+% Will want to double-check the existance of and size of the files (which
+% could cause concatenation errors), so give the location of the data. 
+file_format_cell = {dir_exper, 'fully preprocessed stacks\', 'mouse number', '\', 'day', '\', 'data', 'stack number', '.mat'};
+input_variable = 'data';
+
 % Load mice_all
 load([dir_exper 'mice_all.mat']);
 
 % Adjust here if you want to use only some mice.
 mice_all = mice_all(1:3);
+mice_all(3).days = mice_all(3).days([1:9 11:end]);
+
+% For each mouse you want, enter the pixel number and frame number you want
+% per stack
+stack_parameters = [44301, 6000;
+                    41303, 6000;
+                    39793, 6000];
 
 % Paramters for randomizing--Fields you want representation from, and amount of stacks you want (per
 % mouse) represented from each.
 fields = {'stacks', 48 ;
            'spontaneous', 24};
+
+% Number of digits you want in your stack number name
+digitNumber = 2; 
 
 % Make list of stacks available for using.
 available_mice_all = mice_all;
@@ -42,7 +57,7 @@ for mousei = 1:size(mice_all,2)
 end
 
 % For now, prevent overwriting previous randomizations
-if isfile([dir_out 'mice_all_RandomSubset.mat'])
+if isfile([dir_out 'mice_all_random.mat'])
    error('mice_all_RandomSubset.mat already exists!')
 end    
 
@@ -52,9 +67,10 @@ for fieldi = 1:size(fields,1)
 
     % For each mouse 
     for mousei = 1:size(mice_all,2)
-        
+        mouse = mice_all(mousei).name;
+        disp(mouse);
         % Create entry in random_mice_all
-        random_mice_all(mousei).name = mice_all(mousei).name;
+        random_mice_all(mousei).name = mouse;
         
         % Will go through each day, initialize counter.
         dayi = 1;
@@ -64,6 +80,9 @@ for fieldi = 1:size(fields,1)
        
         while stack_total < fields{fieldi, 2}
             
+            % Get day name
+            day = mice_all(mousei).days(dayi).name; 
+
             % If the field exists in this day and is neither NaN nor empty
             if ~isfield(available_mice_all(mousei).days(dayi), field) || isempty(getfield(available_mice_all(mousei).days(dayi), field))                 dayi = dayi +1;
                 dayi = dayi + 1;
@@ -94,7 +113,36 @@ for fieldi = 1:size(fields,1)
                 end
                 continue
             end    
+
+            % Randomly choose a stack
             index = randsample(numel(stack_list),1);
+            
+            % Get the stack number as a string.
+            stack_number = ListStacks(stack_list(index), digitNumber);
+
+            % Check the existance and size of the stack-- get file name
+            filename = CreateFileStrings(file_format_cell, mouse, day, stack_number, [], false);
+            
+            % Check existance of the stack
+            if ~isfile(filename)
+                dayi = dayi +1;
+                if dayi > size(mice_all(mousei).days,2)
+                    dayi = 1; 
+                end
+                continue
+            end
+
+            % Check sizes of the stack.
+            matObj = matfile(filename);
+            pixels = size(matObj,input_variable, 1);
+            frames = size(matObj, input_variable,2);
+            if pixels ~= stack_parameters(mousei,1) || frames ~= stack_parameters(mousei,2)
+                dayi = dayi +1;
+                if dayi > size(mice_all(mousei).days,2)
+                    dayi = 1; 
+                end
+                continue
+            end
 
             random_mice_all(mousei).days(dayi).name = mice_all(mousei).days(dayi).name;
             eval(['random_mice_all(mousei).days(dayi).' field '(end+1)= stack_list(index);']);
