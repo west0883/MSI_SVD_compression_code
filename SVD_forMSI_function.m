@@ -17,7 +17,7 @@ function []=SVD_forMSI_function(mouse_number)
 
     folder=pwd;
     addpath(genpath(folder));
-    dir_in=[folder '/preprocessed round 5/']; % directory on the MSI network. 
+    dir_in=[folder '/fully preprocessed stacks/' mouse '/']; % directory on the MSI network. 
     dir_out=[folder '/' ]; % directory on the MSI network.
     
     % Load the list of days included for each mouse.
