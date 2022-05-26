@@ -68,20 +68,21 @@ function []=SVD_forMSI_function(mouse_number)
     disp('concatenating');
     count=0;
     
-        % For each  day; 
-        for dayi=1:size(mice_all(mousei).days,2)  
+    % For each  day; 
+    for dayi=1:size(mice_all(mousei).days,2)  
+    
+        % Get the day name.
+        day=mice_all(mousei).days(dayi).name; 
         
-            % Get the day name.
-            day=mice_all(mousei).days(dayi).name; 
-            
-            % List the  stacks in a given day
-            stacks=dir([dir_in day '/data*.mat']);  
-            for stacki=1:size(stacks,1) % for each stack
-                load([dir_in day '/' stacks(stacki).name]);  
-                all_data((count*frames)+1:(count+1)*frames, :)=data';
-                count=count+1;
-            end 
-        end
+        % List the  stacks in a given day
+        stacks=dir([dir_in day '/data*.mat']);  
+        for stacki=1:size(stacks,1) % for each stack
+            load([dir_in day '/' stacks(stacki).name]);  
+            all_data((count*frames)+1:(count+1)*frames, :)=data';
+            count=count+1;
+        end 
+    end
+    
     % run SVD   
     disp('running SVD'); 
     [U,S,V]=compute_svd(all_data, 'randomized', n_compressions);
