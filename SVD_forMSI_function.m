@@ -25,7 +25,6 @@ function []=SVD_forMSI_function(mouse_number)
 
     % Determine index of mouse within mice_all.
     mousei = find(strcmp({mice_all.name}, mouse)==1);
-
     
     disp(['mouse ' mouse]);
 
@@ -34,7 +33,7 @@ function []=SVD_forMSI_function(mouse_number)
 
     % Start a running count of how many stacks each mouse has; for data space pre-alotment
     total_stacks=0;
-    stacks = [];
+    stacks = {};
     % For each  day; count how many stacks are in each day and add them all up so you can make an accurately sized matrix for data pre-alotment
     for dayi=1:size(mice_all(mousei).days,2)  
         
@@ -60,7 +59,7 @@ function []=SVD_forMSI_function(mouse_number)
     % Get infor from first stack to get nummber of pixels
     day=mice_all(mousei).days(1).name; 
      
-    matObj = matfile([stacks(1,:)]);
+    matObj = matfile(stacks{1});
     pixels = size(matObj,'data', 1);
     frames=size(matObj, 'data' ,2);
    
@@ -72,7 +71,7 @@ function []=SVD_forMSI_function(mouse_number)
     count=0; 
     % for each stack
     for stacki=1:size(stacks,1) 
-        load(stacks(stacki,:));  
+        load(stacks{stacki});  
         all_data((count*frames)+1:(count+1)*frames, :)=data';
         count=count+1;
     end 
