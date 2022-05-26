@@ -24,14 +24,13 @@ input_variable = 'data';
 load([dir_exper 'mice_all.mat']);
 
 % Adjust here if you want to use only some mice.
-mice_all = mice_all(1:3);
-mice_all(3).days = mice_all(3).days([1:9 11:end]);
+mice_all = mice_all(4:6);
 
 % For each mouse you want, enter the pixel number and frame number you want
-% per stack
-stack_parameters = [44301, 6000;
-                    41303, 6000;
-                    39793, 6000];
+% per stack (to check them before putting into the big MSI matrix).
+stack_parameters = [48238, 6000;
+                    50123, 6000;
+                    46335, 6000];
 
 % Paramters for randomizing--Fields you want representation from, and amount of stacks you want (per
 % mouse) represented from each.
