@@ -1,7 +1,7 @@
 #!/bin/bash -l        
-#SBATCH --time=5:00:00
+#SBATCH --time=7:00:00
 #SBATCH --ntasks=1
-#SBATCH --mem=200g
+#SBATCH --mem=350g
 #SBATCH --mail-type=ALL  
 #SBATCH --mail-user=west0883@umn.edu 
 #SBATCH -p ram1t
