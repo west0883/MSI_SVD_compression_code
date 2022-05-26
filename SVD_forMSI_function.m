@@ -21,7 +21,7 @@ function []=SVD_forMSI_function(mouse_number)
     dir_out=[folder '/' ]; % directory on the MSI network.
     
     % Load the list of days included for each mouse.
-    load([folder '/mice_all.mat']); 
+    load([folder '/mice_all_random.mat']); 
 
     % Determine index of mouse within mice_all.
     mousei = find(strcmp({mice_all.name}, mouse)==1);
