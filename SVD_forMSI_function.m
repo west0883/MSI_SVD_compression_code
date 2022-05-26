@@ -21,10 +21,10 @@ function []=SVD_forMSI_function(mouse_number)
     dir_out=[folder '/' ]; % directory on the MSI network.
     
     % Load the list of days included for each mouse.
-    load([folder '/days_all.mat']); 
+    load([folder '/mice_all.mat']); 
 
-    % Determine index of mouse within days_all.
-    mousei=find(any(days_all(:).mouse== mouse));
+    % Determine index of mouse within mice_all.
+    mousei=find(any(mice_all(:).name== mouse));
     
     disp(['mouse ' mouse]);
 
@@ -35,10 +35,10 @@ function []=SVD_forMSI_function(mouse_number)
     total_stacks=0;
     
     % For each  day; count how many stacks are in each day and add them all up so you can make an accurately sized matrix for data pre-alotment
-    for dayi=1:size(days_all(mousei).days,2)  
+    for dayi=1:size(mice_all(mousei).days,2)  
         
         % Get the day name.
-        day=days_all(mousei).days(dayi).name; 
+        day=mice_all(mousei).days(dayi).name; 
         
         % List the stacks in a given day
         stacks=dir([dir_in day '/data*.mat']);  
@@ -49,7 +49,7 @@ function []=SVD_forMSI_function(mouse_number)
     disp(['total stacks =' num2str(total_stacks)]); 
     
     % Load the first stack to get nummber of pixels
-    day=days_all(mousei).days(1).name; 
+    day=mice_all(mousei).days(1).name; 
             
     % List the  stacks in that first day
     stacks=dir([dir_in day '/data*.mat']);  
@@ -67,10 +67,10 @@ function []=SVD_forMSI_function(mouse_number)
     count=0;
     
         % For each  day; 
-        for dayi=1:size(days_all(mousei).days,2)  
+        for dayi=1:size(mice_all(mousei).days,2)  
         
             % Get the day name.
-            day=days_all(mousei).days(dayi).name; 
+            day=mice_all(mousei).days(dayi).name; 
             
             % List the  stacks in a given day
             stacks=dir([dir_in day '/data*.mat']);  
