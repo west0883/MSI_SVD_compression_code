@@ -48,25 +48,21 @@ function []=SVD_forMSI_function(mouse_number)
             % List the stacks in a given day
             stacks= [stacks; sprintf('data%02d.mat', all_stacks(stacki))];  
         end
-        
+
         % Add the number of stacks to the running count
         total_stacks=total_stacks+size(stacks,1); 
     end 
     disp(['total stacks =' num2str(total_stacks)]); 
     
-    % Load the first stack to get nummber of pixels
+    % Get infor from first stack to get nummber of pixels
     day=mice_all(mousei).days(1).name; 
-            
-    % List the  stacks in that first day
-    stacks=dir([dir_in day '/data*.mat']);  
-      
-    % Load the first stack
-    load([dir_in day '/' stacks(1).name]);  
-    
-    pixels=size(data,1); 
-    frames=size(data,2);
-    
-    all_data=NaN(total_stacks*frames, pixels);  % initialize data matrix
+     
+    matObj = matfile([dir_in day '/' stacks(1,:)]);
+    pixels = size(matObj,'data', 1);
+    frames=size(matObj, 'data' ,2);
+   
+    % Initialize data matrix.
+    all_data=NaN(total_stacks*frames, pixels); 
 
     % load and concatenate data
     disp('concatenating');
