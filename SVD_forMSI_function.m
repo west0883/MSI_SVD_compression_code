@@ -40,8 +40,14 @@ function []=SVD_forMSI_function(mouse_number)
         % Get the day name.
         day=mice_all(mousei).days(dayi).name; 
         
-        % List the stacks in a given day
-        stacks=dir([dir_in day '/data*.mat']);  
+        all_stacks = [mice_all(mousei).days(dayi).stacks mice_all(mousei).days(dayi).spontaneous];
+        stacks = [];
+        % Get list of stacks for that day from mice_all
+        for stacki = 1: size(all_stacks)
+       
+            % List the stacks in a given day
+            stacks= [stacks; sprintf('data%02d.mat', all_stacks(stacki))];  
+        end
         
         % Add the number of stacks to the running count
         total_stacks=total_stacks+size(stacks,1); 
