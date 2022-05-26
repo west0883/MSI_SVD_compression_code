@@ -14,7 +14,7 @@ function []=SVD_forMSI_function(mouse_number)
     mouse=num2str(mouse_number); 
     
     n_compressions=200;
-
+    
     folder=pwd;
     addpath(genpath(folder));
     dir_in=[folder '/fully preprocessed stacks/' mouse '/']; % directory on the MSI network. 
@@ -38,7 +38,7 @@ function []=SVD_forMSI_function(mouse_number)
     for dayi=1:size(days_all(mousei).days,2)  
         
         % Get the day name.
-        day=days_all(mousei).days(dayi).name; 
+        day=days_all(mousei).days(1).name; 
         
         % List the stacks in a given day
         stacks=dir([dir_in day '/data*.mat']);  
@@ -47,12 +47,25 @@ function []=SVD_forMSI_function(mouse_number)
         total_stacks=total_stacks+size(stacks,1); 
     end 
     disp(['total stacks =' num2str(total_stacks)]); 
-    all_data=NaN(total_stacks*6000, 256*256);  % initialize data matrix
+    
+    % Load the first stack to get nummber of pixels
+    day=days_all(mousei).days(1).name; 
+            
+    % List the  stacks in that first day
+    stacks=dir([dir_in day '/data*.mat']);  
+      
+    % Load the first stack
+    load([dir_in day '/' stacks(1).name]);  
+    
+    pixels=size(data,1); 
+    frames=size(data,2);
+    
+    all_data=NaN(total_stacks*frames, pixels);  % initialize data matrix
 
     % load and concatenate data
     disp('concatenating');
     count=0;
-    try
+    
         % For each  day; 
         for dayi=1:size(days_all(mousei).days,2)  
         
@@ -63,8 +76,7 @@ function []=SVD_forMSI_function(mouse_number)
             stacks=dir([dir_in day '/data*.mat']);  
             for stacki=1:size(stacks,1) % for each stack
                 load([dir_in day '/' stacks(stacki).name]);  
-                data_reshaped=reshape(data,256*256, 6000); 
-                all_data((count*6000)+1:(count+1)*6000, :)=data_reshaped';
+                all_data((count*frames)+1:(count+1)*frames, :)=data';
                 count=count+1;
             end 
         end
@@ -73,8 +85,5 @@ function []=SVD_forMSI_function(mouse_number)
     [U,S,V]=compute_svd(all_data, 'randomized', n_compressions);
     disp('saving'); 
     save(filename_output, 'U', 'S', 'V', '-v7.3'); 
-    catch
-        disp('found a corrupt file');
-    end
 
 end
