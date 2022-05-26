@@ -77,7 +77,7 @@ function []=SVD_forMSI_function(mouse_number)
     end 
 
     % run SVD   
-    disp('running SVD'); 
+    disp(['running SVD, ' num2str(n_compressions) ' compressions']); 
     [U,S,V]=compute_svd(all_data, 'randomized', n_compressions);
     disp('saving'); 
     save(filename_output, 'U', 'S', 'V', '-v7.3'); 
