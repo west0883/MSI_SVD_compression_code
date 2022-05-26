@@ -16,7 +16,7 @@ function []=SVD_forMSI_function(mouse_number)
     n_compressions=200;
     
     folder=pwd;
-    %addpath(genpath(folder));
+    addpath(genpath(folder));
     dir_in=[folder '/fully preprocessed stacks/' mouse '/']; % directory on the MSI network. 
     dir_out=[folder '/' ]; % directory on the MSI network.
     
