@@ -46,9 +46,11 @@ function []=SVD_forMSI_function(mouse_number)
         stacks = [];
         % Get list of stacks for that day from mice_all
         for stacki = 1: size(all_stacks)
-       
+            
+            if ~isempty(all_stacks)
             % List the stacks in a given day
             stacks= [stacks; sprintf('data%02d.mat', all_stacks(stacki))];  
+            end
         end
 
         % Add the number of stacks to the running count
