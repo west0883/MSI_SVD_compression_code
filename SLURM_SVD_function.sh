@@ -5,7 +5,7 @@
 #SBATCH --mail-type=ALL  
 #SBATCH --mail-user=west0883@umn.edu 
 #SBATCH -p ram1t
-#SBATCH --array=1087, 1088, 1096
+#SBATCH --array=1087,1088,1096
 
 
 # Use '%A' for array-job ID, '%J' for job ID and '%a' for task ID
