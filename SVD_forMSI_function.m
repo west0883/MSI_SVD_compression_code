@@ -23,20 +23,28 @@ function []=SVD_forMSI_function(mouse_number)
     % Load the list of days included for each mouse.
     load([folder '/days_all.mat']); 
 
-
-    disp(['mouse #' mouse]);
+    % Determine index of mouse within days_all.
+    mousei=find(any(days_all(:).mouse== mouse));
+    
+    disp(['mouse ' mouse]);
 
     % Make output filename
     filename_output=[dir_out 'm' mouse '_SVD_compressed.mat']; 
 
-    % Get list of days
-    eval(['days_list=days_all.m' mouse ';']); 
-
-    total_stacks=0; % start a running count of how many stacks each mouse has; for data space pre-alotment
-    for dayi=1:size(days_list,1) % for each  day; count how many stacks are in each day and add them all up so you can make an accurately sized matrix for data pre-alotment
-        day=days_list(dayi,:);
-        stacks=dir([dir_in day '/data*.mat']);  % list the  stacks in a given day
-        total_stacks=total_stacks+size(stacks,1); % add the number of stacks to the running count
+    % Start a running count of how many stacks each mouse has; for data space pre-alotment
+    total_stacks=0;
+    
+    % For each  day; count how many stacks are in each day and add them all up so you can make an accurately sized matrix for data pre-alotment
+    for dayi=1:size(days_all(mousei).days,2)  
+        
+        % Get the day name.
+        day=days_all(mousei).days(dayi).name; 
+        
+        % List the stacks in a given day
+        stacks=dir([dir_in day '/data*.mat']);  
+        
+        % Add the number of stacks to the running count
+        total_stacks=total_stacks+size(stacks,1); 
     end 
     disp(['total stacks =' num2str(total_stacks)]); 
     all_data=NaN(total_stacks*6000, 256*256);  % initialize data matrix
@@ -45,9 +53,14 @@ function []=SVD_forMSI_function(mouse_number)
     disp('concatenating');
     count=0;
     try
-        for dayi=1:size(days_list,1) % for each  day; 
-            day=days_list(dayi,:);
-            stacks=dir([dir_in day '/data*.mat']);  % list the  stacks in a given day
+        % For each  day; 
+        for dayi=1:size(days_all(mousei).days,2)  
+        
+            % Get the day name.
+            day=days_all(mousei).days(dayi).name; 
+            
+            % List the  stacks in a given day
+            stacks=dir([dir_in day '/data*.mat']);  
             for stacki=1:size(stacks,1) % for each stack
                 load([dir_in day '/' stacks(stacki).name]);  
                 data_reshaped=reshape(data,256*256, 6000); 
