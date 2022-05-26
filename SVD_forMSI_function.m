@@ -16,7 +16,7 @@ function []=SVD_forMSI_function(mouse_number)
     n_compressions=200;
     
     folder=pwd;
-    addpath(genpath(folder));
+    %addpath(genpath(folder));
     dir_in=[folder '/fully preprocessed stacks/' mouse '/']; % directory on the MSI network. 
     dir_out=[folder '/' ]; % directory on the MSI network.
     
@@ -24,7 +24,8 @@ function []=SVD_forMSI_function(mouse_number)
     load([folder '/mice_all.mat']); 
 
     % Determine index of mouse within mice_all.
-    mousei=find(any(mice_all(:).name== mouse));
+    mousei = find(strcmp({mice_all.name}, mouse)==1);
+
     
     disp(['mouse ' mouse]);
 
@@ -50,7 +51,7 @@ function []=SVD_forMSI_function(mouse_number)
         end
 
         % Add the number of stacks to the running count
-        total_stacks=total_stacks+size(stacks,1); 
+        total_stacks=total_stacks+size(all_stacks,2); 
     end 
     disp(['total stacks =' num2str(total_stacks)]); 
     
@@ -82,7 +83,7 @@ function []=SVD_forMSI_function(mouse_number)
             count=count+1;
         end 
     end
-    
+
     % run SVD   
     disp('running SVD'); 
     [U,S,V]=compute_svd(all_data, 'randomized', n_compressions);
