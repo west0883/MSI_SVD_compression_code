@@ -42,6 +42,7 @@ function []=SVD_forMSI_function(mouse_number)
         day=mice_all(mousei).days(dayi).name; 
         
         all_stacks = [mice_all(mousei).days(dayi).stacks mice_all(mousei).days(dayi).spontaneous];
+        all_stacks = all_stacks(~isnan(all_stacks));
         stacks = [];
         % Get list of stacks for that day from mice_all
         for stacki = 1: size(all_stacks)
