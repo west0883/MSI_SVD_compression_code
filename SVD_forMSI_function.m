@@ -38,7 +38,7 @@ function []=SVD_forMSI_function(mouse_number)
     for dayi=1:size(days_all(mousei).days,2)  
         
         % Get the day name.
-        day=days_all(mousei).days(1).name; 
+        day=days_all(mousei).days(dayi).name; 
         
         % List the stacks in a given day
         stacks=dir([dir_in day '/data*.mat']);  
