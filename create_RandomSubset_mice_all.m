@@ -17,25 +17,25 @@ mkdir(dir_out);
 
 % Will want to double-check the existance of and size of the files (which
 % could cause concatenation errors), so give the location of the data. 
-file_format_cell = {dir_exper, 'fully preprocessed stacks\', 'mouse number', '\', 'day', '\', 'data', 'stack number', '.mat'};
+file_format_cell = {dir_exper, 'preprocessing\fully preprocessed stacks\', 'mouse number', '\', 'day', '\', 'data', 'stack number', '.mat'};
 input_variable = 'data';
 
 % Load mice_all
 load([dir_exper 'mice_all.mat']);
 
 % Adjust here if you want to use only some mice.
-mice_all = mice_all(4:6);
+mice_all = mice_all(7:8);
 
 % For each mouse you want, enter the pixel number and frame number you want
 % per stack (to check them before putting into the big MSI matrix).
-stack_parameters = [48238, 6000;
-                    50123, 6000;
+stack_parameters = [38942, 6000;
+                    43031, 6000;
                     46335, 6000];
 
 % Paramters for randomizing--Fields you want representation from, and amount of stacks you want (per
 % mouse) represented from each.
 fields = {'stacks', 48 ;
-           'spontaneous', 24};
+          'spontaneous', 24};
 
 % Number of digits you want in your stack number name
 digitNumber = 2; 
@@ -78,7 +78,7 @@ for fieldi = 1:size(fields,1)
         stack_total = 0;
        
         while stack_total < fields{fieldi, 2}
-            
+
             % Get day name
             day = mice_all(mousei).days(dayi).name; 
 
@@ -91,14 +91,14 @@ for fieldi = 1:size(fields,1)
                 continue
             end
             % If NaN, set the corresponding random output to NaN, continue 
-            if any(isnan(getfield(available_mice_all(mousei).days(dayi), field)))
-                eval(['random_mice_all(mousei).days(dayi).' field '= NaN;']);
-                dayi = dayi + 1;
-                if dayi > size(mice_all(mousei).days,2)
-                    dayi = 1; 
-                end
-                continue
-            end    
+           % if any(isnan(getfield(available_mice_all(mousei).days(dayi), field)))
+%                 eval(['random_mice_all(mousei).days(dayi).' field '= NaN;']);
+%                 dayi = dayi + 1;
+%                 if dayi > size(mice_all(mousei).days,2)
+%                     dayi = 1; 
+%                 end
+%                 continue
+            %end    
 
             % Randomly pull a stack from the listed day & field. Put it
             % into random_mice_all, remove it from available_mice_all.
