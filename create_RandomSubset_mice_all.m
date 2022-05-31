@@ -50,7 +50,7 @@ for mousei = 1:size(mice_all,2)
         random_mice_all(mousei).days(dayi).name = mice_all(mousei).days(dayi).name;
         for fieldi = 1:size(fields,1)
             field = fields{fieldi, 1};
-            eval(['random_mice_all(mousei).days(dayi).' field '= [];']);
+            random_mice_all(mousei).days(dayi).(field) = [];
         end
     end
 end
@@ -102,7 +102,7 @@ for fieldi = 1:size(fields,1)
 
             % Randomly pull a stack from the listed day & field. Put it
             % into random_mice_all, remove it from available_mice_all.
-            stack_list = getfield(available_mice_all(mousei).days(dayi), field);
+            stack_list = available_mice_all(mousei).days(dayi).(field);
             
             % If there are no stacks left in this day, skip the day.
             if isempty(stack_list)
@@ -144,8 +144,8 @@ for fieldi = 1:size(fields,1)
             end
 
             random_mice_all(mousei).days(dayi).name = mice_all(mousei).days(dayi).name;
-            eval(['random_mice_all(mousei).days(dayi).' field '(end+1)= stack_list(index);']);
-            eval(['available_mice_all(mousei).days(dayi).' field '= stack_list([1:index-1 index+1:end]);']);
+            random_mice_all(mousei).days(dayi).(field)(end+1)= stack_list(index);
+            available_mice_all(mousei).days(dayi).(field) = stack_list([1:index-1 index+1:end]);
             
             % Increase stack counter
             stack_total = stack_total + 1;
