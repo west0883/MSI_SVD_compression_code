@@ -13,7 +13,7 @@ function []=SVD_forMSI_function(mouse_number)
     % Convert mouse number to a string 
     mouse=num2str(mouse_number); 
     
-    n_compressions=500;
+    n_compressions = 500;
     
     folder=pwd;
     %addpath(genpath(folder));
@@ -69,6 +69,7 @@ function []=SVD_forMSI_function(mouse_number)
     % load and concatenate data
     disp('concatenating');
     count=0; 
+    
     % for each stack
     for stacki=1:size(stacks,1) 
         load(stacks{stacki});  
